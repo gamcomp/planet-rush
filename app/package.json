@@ -1,0 +1,25 @@
+{
+  "name": "planet-rush-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Planet Rush için Android ve iOS kabuğu (Capacitor).",
+  "scripts": {
+    "www": "node scripts/prepare-www.mjs",
+    "sync": "npm run www && npx cap sync",
+    "android": "npm run sync && npx cap open android",
+    "ios": "npm run sync && npx cap open ios",
+    "apk": "npm run sync && cd android && ./gradlew assembleDebug"
+  },
+  "dependencies": {
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/core": "^8.6.0",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/splash-screen": "^8.0.2",
+    "@capacitor/status-bar": "^8.0.4"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^8.6.0",
+    "@capacitor/cli": "^8.6.0",
+    "@capacitor/ios": "^8.6.0"
+  }
+}

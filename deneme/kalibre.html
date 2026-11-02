@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>Gemi yön kalibrasyonu</title>
+<style>
+  body { margin: 0; background: #0b0f22; color: #dfe6ff; font: 13px system-ui, sans-serif; }
+  table { border-collapse: collapse; }
+  td { padding: 4px 6px; border-bottom: 1px solid #222a4a; text-align: center; }
+  td img, td canvas { width: 150px; height: 110px; object-fit: contain; display: block; background: #151b38; }
+  th { padding: 6px; color: #8fa0d8; font-weight: 600; }
+</style>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }
+</script>
+</head>
+<body>
+<table><thead><tr><th>gemi</th><th>2D görsel</th><th>A: olduğu gibi</th><th>B: 180° döndür</th><th>C: ters çevir</th><th>D: ters + 180°</th></tr></thead><tbody id="rows"></tbody></table>
+<script type="module">
+import * as T from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+const IDS = ['vanguard','falcon','shadow','titan','nova','hunter','volt','raven','magma','glacier','emerald','storm','phantom','sol','infinity'];
+const KEY = id => id === 'vanguard' ? 'ship' : 'ship_' + id;
+const r = new T.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true }); r.setSize(300, 220);
+r.outputColorSpace = T.SRGBColorSpace; r.toneMapping = T.ACESFilmicToneMapping;
+const scene = new T.Scene(); scene.environment = new T.PMREMGenerator(r).fromScene(new RoomEnvironment(), .04).texture;
+scene.add(new T.HemisphereLight(0xffffff, 0x333344, 1)); const d = new T.DirectionalLight(0xffffff, 2); d.position.set(-1, 3, -1); scene.add(d);
+const cam = new T.OrthographicCamera(-0.75, 0.75, 0.55, -0.55, 0.01, 10); cam.position.set(0, 5, 0); cam.up.set(0, 0, -1); cam.lookAt(0, 0, 0);
+function base(obj) {
+  const b0 = new T.Box3().setFromObject(obj).getSize(new T.Vector3());
+  if (b0.y > Math.min(b0.x, b0.z)) { if (b0.x >= b0.z) obj.rotation.x = Math.PI / 2; else obj.rotation.z = Math.PI / 2; }
+  obj.updateMatrixWorld(true);
+  const b1 = new T.Box3().setFromObject(obj).getSize(new T.Vector3());
+  if (b1.z > b1.x) obj.rotation.y = Math.PI / 2;
+  obj.updateMatrixWorld(true);
+}
+const rows = document.getElementById('rows');
+for (const id of IDS) {
+  const tr = document.createElement('tr'); tr.innerHTML = `<td>${id}</td><td><img src="../art/${KEY(id)}.webp"></td>`; rows.appendChild(tr);
+  const g = await new GLTFLoader().loadAsync(`../models/web/${id}.glb`);
+  const obj = g.scene; base(obj);
+  const box = new T.Box3().setFromObject(obj), c = box.getCenter(new T.Vector3()), s = box.getSize(new T.Vector3());
+  obj.position.sub(c);
+  const inner = new T.Group(); inner.add(obj); inner.scale.setScalar(1.3 / Math.max(s.x, s.z));
+  const outer = new T.Group(); outer.add(inner); scene.add(outer);
+  for (const [flip, yaw] of [[0, 0], [0, 1], [1, 0], [1, 1]]) {
+    outer.rotation.set(flip * Math.PI, 0, 0); const y = new T.Group();
+    outer.rotation.order = 'YXZ'; outer.rotation.y = yaw * Math.PI;
+    r.render(scene, cam);
+    const cvs = document.createElement('canvas'); cvs.width = 300; cvs.height = 220; cvs.getContext('2d').drawImage(r.domElement, 0, 0);
+    const td = document.createElement('td'); td.appendChild(cvs); tr.appendChild(td);
+  }
+  scene.remove(outer);
+}
+window.__modelLoaded = true;
+</script>
+</body>
+</html>

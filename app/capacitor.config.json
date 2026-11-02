@@ -1,0 +1,12 @@
+{
+  "appId": "co.gam.planetrush",
+  "appName": "Planet Rush",
+  "webDir": "www",
+  "backgroundColor": "#05060f",
+  "android": { "backgroundColor": "#05060f", "allowMixedContent": false },
+  "ios": { "backgroundColor": "#05060f", "contentInset": "never", "scrollEnabled": false },
+  "plugins": {
+    "SplashScreen": { "launchShowDuration": 400, "launchAutoHide": true, "backgroundColor": "#05060f", "showSpinner": false },
+    "StatusBar": { "overlaysWebView": true, "style": "DARK", "backgroundColor": "#00000000" }
+  }
+}

@@ -1,0 +1,13 @@
+# ham 3D modeller (~195 MB); oyuna gömülen sıkıştırılmış hâlleri models/web/ içinde
+models/*.glb
+# Higgsfield tarz görselleri (büyük PNG'ler)
+art/tarzlar/
+# uygulama derleme çıktıları
+app/node_modules/
+app/www/
+app/android/app/build/
+app/android/.gradle/
+app/ios/App/Pods/
+.qodo/
+.DS_Store
+Thumbs.db
