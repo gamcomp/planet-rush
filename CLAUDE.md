@@ -57,8 +57,11 @@ Kullanıcı Türkçe konuşur; cevaplar Türkçe olmalı. GitHub'a yalnızca kul
   (`gradedPlanetCanvas`) üretilir; görseller geç yüklenirse kendiliğinden yenilenir.
 - Hangar: gerçek model varsa `G3.hangarSet/hangarDraw` (`#scGL3`), yoksa eski `hgBuild()` / `hgDraw()`
   (görselden hacim üretir); WebGL yoksa `build3dShipLayers()` katmanlı görünüm.
-- Ses: `audioBus('sfx'|'voice'|'music')` → master → limiter (DynamicsCompressor) → hoparlör; spiker konuşurken
-  `duck()` müziği ve efektleri kısar; kayıtlı müzik `loopPoints()` ile MP3 baş/son sessizliği atlanarak döngülenir.
+- Ses: `audioBus('sfx'|'voice'|'music')` → master → yumuşak limiter (DynamicsCompressor) → hoparlör; efekt kanalı
+  .58 ses + 4,8 kHz low-pass ile yumuşatıldı, her kayıtlı efekt 8 ms yumuşak girişle başlar, sentez yedeklerinde
+  kare/testere dalga yok. **Spiker kullanıcı isteğiyle kaldırıldı** (6 Kasım 2026): `say()` boş, `v_*` sesleri
+  SOUNDS'tan silindi, Ayarlar'daki "Spiker sesi" satırı yok — geri eklenmesin.
+  Kayıtlı müzik `loopPoints()` ile MP3 baş/son sessizliği atlanarak döngülenir.
   Kaynak sesler düşük kaliteli (efektler 64 kbps mono, müzik 80 kbps ve yalnızca 22 sn). Higgsfield'in müzik
   (sonilo) ve efekt (mirelo) modelleri yalnızca kendi oyun hattında kullanılabiliyor; yeni ses için ElevenLabs
   (Sound Effects / Music, yüksek bit hızı) ya da CC0 kütüphaneler gerekir.
