@@ -99,4 +99,7 @@ Kullanıcı Türkçe konuşur; cevaplar Türkçe olmalı. GitHub'a yalnızca kul
   Örnek görüntüler: https://claude.ai/artifact/8zKF79WQubL5zPMycurT4F
 - Masaüstü tarayıcıda `index.html` başındaki betik `phone.html`'e yönlendirir (telefon çerçevesi, içinde `index.html?embed=1`);
   `?full=1` tam ekran. Telefon, yerel uygulama ve iframe içi etkilenmez.
+- Ana ekran videosu (6 Kasım 2026): Higgsfield MiniMax H3 Max ile bg11'den (yörüngeden Dünya) başlangıç=bitiş kareli
+  döngü; `art/home.webm`/`home.mp4` (576 px, sessiz) → `HOME_VIDEO`. `#homeVid` yukarı kaydırılıp büyütüldü (ufuk kartın üstünde);
+  sabit kare `bg11`. Diğer 4 aday ve eski video `art/video-onerileri/`. ffmpeg: scratchpad'te `ffmpeg-static`.
 - Oyunun yeni adı henüz seçilmedi (şimdilik "Planet Rush" kalacak).

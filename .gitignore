@@ -11,3 +11,5 @@ app/ios/App/Pods/
 .qodo/
 .DS_Store
 Thumbs.db
+
+art/video-onerileri/v*.mp4
