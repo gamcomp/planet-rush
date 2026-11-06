@@ -102,4 +102,6 @@ Kullanıcı Türkçe konuşur; cevaplar Türkçe olmalı. GitHub'a yalnızca kul
 - Ana ekran videosu (6 Kasım 2026): Higgsfield MiniMax H3 Max ile bg11'den (yörüngeden Dünya) başlangıç=bitiş kareli
   döngü; `art/home.webm`/`home.mp4` (576 px, sessiz) → `HOME_VIDEO`. `#homeVid` yukarı kaydırılıp büyütüldü (ufuk kartın üstünde);
   sabit kare `bg11`. Diğer 4 aday ve eski video `art/video-onerileri/`. ffmpeg: scratchpad'te `ffmpeg-static`.
+- Ana ekran düzeni için 6 öneri (A Ufuk ve Gemi, B Dünya Şeridi, C Günün Görevi, D Gemi Vitrini, E Bölüm Haritası,
+  F Sinematik Sade): https://claude.ai/artifact/C8nKD6fmSiUheBGCdD4KwY — kullanıcı henüz seçmedi.
 - Oyunun yeni adı henüz seçilmedi (şimdilik "Planet Rush" kalacak).
