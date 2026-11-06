@@ -89,4 +89,9 @@ Kullanıcı Türkçe konuşur; cevaplar Türkçe olmalı. GitHub'a yalnızca kul
   Kullanıcı henüz son seçimi yapmadı.
 - Oyun GitHub Pages'te yayında: https://gamcomp.github.io/planet-rush/ (depo gamcomp/planet-rush, herkese açık;
   `git push` yeterli, yayın 1–2 dk sürer).
+- Logo (6 Kasım 2026): ana ekran/yükleme logosu 08i-9 (gemi + lazer + patlayan gezegenler); kaynak
+  `art/logo-onerileri/08i-9.png` + Higgsfield arka plan maskesi, siyah→alfa ile birleştirildi → `art/logo.webp` → `ASSETS.logo`.
+- Toplar/gemiler telefonda siyah görünüyordu: top dokusu gamma ~1.0, tüm toplarda emissiveMap; yansıma haritası
+  (half-float) yoksa `scene.environment` kurulmaz, Hemisphere+Ambient ışık güçlenir; gemi malzemeleri metalness ≤0.55.
+- Arka plan için 10 öneri `art/arkaplan-onerileri/01–10.png` (9:16); kullanıcı henüz seçmedi.
 - Oyunun yeni adı henüz seçilmedi (şimdilik "Planet Rush" kalacak).
