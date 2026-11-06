@@ -51,8 +51,9 @@ Kullanıcı Türkçe konuşur; cevaplar Türkçe olmalı. GitHub'a yalnızca kul
   Test kancası: `__yz.g3` (`debugBall(i)`, `debugScene()`, `screenToWorld`, `shipReady()`).
   Bölüm sahnesi (`rebuildLevel()`, yol değişince kendiliğinden): yolun iki kenarına metal 3D duvar + mavi ışık
   şeridi, rayın gölgesini aşağıdaki uzaya düşüren görünmez taban (y=-60'ta ikinci gölge düzlemi), kara deliğin
-  altında dönen huni (çekim kuyusu), köşelerde 3D dev gezegen (tek bölümlerde halkalı) ve ay — top renkleriyle
-  karışmasın diye soluk ve ton kaydırılmış — ve derin yıldız katmanları; kamera yavaşça salınır (paralaks).
+  altında dönen huni (çekim kuyusu), köşelerde 3D dev gezegen (tek bölümlerde halkalı) ve ay — gerçek yüzey haritaları
+  `pl0`–`pl4`, `moon2` (Higgsfield, `art/gezegen-dokulari`), fresnel atmosfer kabuğu, kutup kameraya bakmasın diye eğik
+  (`tiltedBody`) — ve derin yıldız katmanları. Kamera sabit (kullanıcı isteği); yalnızca patlama sarsıntısı oynatır.
   3D'de 2D `farLayer` çizilmez. Top dokuları `IMG.tex0..5` görsellerinden, koyulaştırılıp doygunlaştırılarak
   (`gradedPlanetCanvas`) üretilir; görseller geç yüklenirse kendiliğinden yenilenir.
 - Performans (6 Kasım 2026): `t3lib` ve `ship3dData` artık `type="text/plain"`; sondaki başlatıcı betik gam.co açılışının
