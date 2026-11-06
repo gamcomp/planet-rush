@@ -55,6 +55,11 @@ Kullanıcı Türkçe konuşur; cevaplar Türkçe olmalı. GitHub'a yalnızca kul
   karışmasın diye soluk ve ton kaydırılmış — ve derin yıldız katmanları; kamera yavaşça salınır (paralaks).
   3D'de 2D `farLayer` çizilmez. Top dokuları `IMG.tex0..5` görsellerinden, koyulaştırılıp doygunlaştırılarak
   (`gradedPlanetCanvas`) üretilir; görseller geç yüklenirse kendiliğinden yenilenir.
+- Performans (6 Kasım 2026): `t3lib` ve `ship3dData` artık `type="text/plain"`; sondaki başlatıcı betik gam.co açılışının
+  hareketi bitince (~1,9 sn) önce three.js'i çalıştırır, `window.SHIP3D`'yi metinden tembel okuyan bir Proxy yapar, sonra
+  mainCode'u çalıştırır. 3D: gölge 1024 PCF, piksel oranı ≤1,5, zemin dokusu wk ≤1,35. `frame()` FPS'i izler; oyun
+  sırasında ort. <40 FPS olursa `lowQ` açılır (`yorunge-lowq` saklanır; piksel oranı 1, gölge 512, dpr ≤1,5).
+  Sesler `fetch(dataURI)` + `decodeAudioData` ile çözülür. Açılış animasyonları yalnızca transform/opacity kullanmalı.
 - Hangar: gerçek model varsa `G3.hangarSet/hangarDraw` (`#scGL3`), yoksa eski `hgBuild()` / `hgDraw()`
   (görselden hacim üretir); WebGL yoksa `build3dShipLayers()` katmanlı görünüm.
 - Ses: `audioBus('sfx'|'voice'|'music')` → master → yumuşak limiter (DynamicsCompressor) → hoparlör; efekt kanalı
