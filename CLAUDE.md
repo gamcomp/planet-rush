@@ -94,4 +94,9 @@ Kullanıcı Türkçe konuşur; cevaplar Türkçe olmalı. GitHub'a yalnızca kul
 - Toplar/gemiler telefonda siyah görünüyordu: top dokusu gamma ~1.0, tüm toplarda emissiveMap; yansıma haritası
   (half-float) yoksa `scene.environment` kurulmaz, Hemisphere+Ambient ışık güçlenir; gemi malzemeleri metalness ≤0.55.
 - Arka plan için 10 öneri `art/arkaplan-onerileri/01–10.png` (9:16); kullanıcı henüz seçmedi.
+- Arka planlar: `bg10`–`bg19` (Higgsfield, `art/arkaplan-onerileri`); her galakside dünyalar `(t+gal)%2` ile eski/yeni arasında dönüşür.
+- Yollar: `RAIL_STYLES` (galaksi başına ray dokusu `rail`, `rail1`–`rail9` + 3D duvar ve ışık rengi); `railStyle()`.
+  Örnek görüntüler: https://claude.ai/artifact/8zKF79WQubL5zPMycurT4F
+- Masaüstü tarayıcıda `index.html` başındaki betik `phone.html`'e yönlendirir (telefon çerçevesi, içinde `index.html?embed=1`);
+  `?full=1` tam ekran. Telefon, yerel uygulama ve iframe içi etkilenmez.
 - Oyunun yeni adı henüz seçilmedi (şimdilik "Planet Rush" kalacak).

@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Planet Rush</title>
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<style>
+/* Desktop shell: the game (index.html?embed=1) runs inside a phone-shaped frame, sized to the window */
+html, body { height: 100%; margin: 0; overflow: hidden; background: #04050d; font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; }
+body { display: grid; place-items: center; background: radial-gradient(ellipse at 50% 40%, #1a1440 0%, #070818 55%, #03040a 100%); }
+.ph { position: relative; height: min(92vh, 920px); aspect-ratio: 9 / 19.5; border-radius: 52px; padding: 12px; box-sizing: border-box;
+  background: linear-gradient(145deg, #30344c, #0d0f1c 40%, #1d2133);
+  box-shadow: 0 0 0 2px #3a3f5c, 0 30px 80px rgba(0, 0, 0, .7), 0 0 140px rgba(124, 92, 255, .22); }
+.ph::before { content: ""; position: absolute; top: 24px; left: 50%; width: 104px; height: 28px; margin-left: -52px; border-radius: 16px; background: #000; z-index: 2; pointer-events: none; }
+.ph::after { content: ""; position: absolute; right: -4px; top: 22%; width: 4px; height: 72px; border-radius: 0 3px 3px 0; background: #2a2e44; }
+iframe { display: block; width: 100%; height: 100%; border: 0; border-radius: 40px; background: #05060f; }
+.tip { position: fixed; bottom: 14px; left: 0; right: 0; margin: 0; text-align: center; color: rgba(220, 225, 255, .5); font-size: 12px; }
+.tip a { color: rgba(220, 225, 255, .78); }
+</style>
+</head>
+<body>
+<div class="ph"><iframe id="game" title="Planet Rush" allow="autoplay; fullscreen; vibrate; gamepad"></iframe></div>
+<p class="tip">En iyi deneyim için telefonundan aç · <a href="index.html?full=1">Tam ekran oyna</a></p>
+<script>
+  // keep any hash/query the visitor came with, and always mark the inner copy as embedded
+  var q = location.search.replace(/^\?/, '');
+  document.getElementById('game').src = 'index.html?' + (q ? q + '&' : '') + 'embed=1' + location.hash;
+  // keyboard focus goes straight to the game
+  document.getElementById('game').addEventListener('load', function () { try { this.contentWindow.focus(); } catch (e) {} });
+</script>
+</body>
+</html>
