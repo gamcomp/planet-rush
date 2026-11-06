@@ -682,6 +682,16 @@ html,body{height:100%;margin:0;overflow:hidden;background:var(--void);color:var(
 #menuS .dockBtn .badge{top:-6px;right:-6px}
 #menuS .dockBtn .dot{top:-1px;left:-1px}
 #menuS .toast{bottom:calc(env(safe-area-inset-bottom,0px) + 110px)}
+/* home: no dark veil over the video, and one consistent glass style for everything in the top bar */
+#menuS .homeArt::after{display:none}
+#menuS .topBar{gap:8px}
+#menuS .bestPill,#menuS .roundBtn{height:44px;box-sizing:border-box;border:1px solid rgba(255,255,255,.16);background:rgba(10,12,32,.42);box-shadow:none;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+#menuS .bestPill{padding:0 14px 0 6px;gap:6px;font:700 15px var(--f-ui);font-variant-numeric:tabular-nums}
+#menuS .bestPill img{width:28px;height:28px}
+#menuS .bestPill.gem{border-color:rgba(127,224,255,.28)}
+#menuS .roundBtn{width:44px;padding:7px}
+#menuS .dockBtn{background:rgba(10,12,32,.42);border-color:rgba(255,255,255,.16);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+#menuS .testBadge{top:50px}
 @media (max-height:680px){#menuS .playBig{height:58px}#menuS .playLbl{font-size:24px}#menuS .homeHero{margin-top:10px}}
 </style>
 </head>

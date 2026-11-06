@@ -12,7 +12,8 @@ body { display: grid; place-items: center; background: radial-gradient(ellipse a
 .ph { position: relative; height: min(92vh, 920px); aspect-ratio: 9 / 19.5; border-radius: 52px; padding: 12px; box-sizing: border-box;
   background: linear-gradient(145deg, #30344c, #0d0f1c 40%, #1d2133);
   box-shadow: 0 0 0 2px #3a3f5c, 0 30px 80px rgba(0, 0, 0, .7), 0 0 140px rgba(124, 92, 255, .22); }
-.ph::before { content: ""; position: absolute; top: 24px; left: 50%; width: 104px; height: 28px; margin-left: -52px; border-radius: 16px; background: #000; z-index: 2; pointer-events: none; }
+/* camera dot sits in the bezel, never over the game */
+.ph::before { content: ""; position: absolute; top: 3px; left: 50%; width: 7px; height: 7px; margin-left: -3.5px; border-radius: 50%; background: #0a0b14; box-shadow: inset 0 0 0 1.5px #1e2236; z-index: 2; pointer-events: none; }
 .ph::after { content: ""; position: absolute; right: -4px; top: 22%; width: 4px; height: 72px; border-radius: 0 3px 3px 0; background: #2a2e44; }
 iframe { display: block; width: 100%; height: 100%; border: 0; border-radius: 40px; background: #05060f; }
 .tip { position: fixed; bottom: 14px; left: 0; right: 0; margin: 0; text-align: center; color: rgba(220, 225, 255, .5); font-size: 12px; }
