@@ -103,5 +103,7 @@ Kullanıcı Türkçe konuşur; cevaplar Türkçe olmalı. GitHub'a yalnızca kul
   döngü; `art/home.webm`/`home.mp4` (576 px, sessiz) → `HOME_VIDEO`. `#homeVid` yukarı kaydırılıp büyütüldü (ufuk kartın üstünde);
   sabit kare `bg11`. Diğer 4 aday ve eski video `art/video-onerileri/`. ffmpeg: scratchpad'te `ffmpeg-static`.
 - Ana ekran düzeni için 6 öneri (A Ufuk ve Gemi, B Dünya Şeridi, C Günün Görevi, D Gemi Vitrini, E Bölüm Haritası,
-  F Sinematik Sade): https://claude.ai/artifact/C8nKD6fmSiUheBGCdD4KwY — kullanıcı henüz seçmedi.
+  F Sinematik Sade): https://claude.ai/artifact/C8nKD6fmSiUheBGCdD4KwY — **F uygulandı** (6 Kasım 2026): OYNA (`#startBtn`)
+  `.homeHero` içinde logonun altında hap düğme, `#nextInfo` tek satır yazı, `.dock` 4 yuvarlak simge (etiketler gizli ama
+  ekran okuyucuda var); stiller `#menuS` ile en sonda. Ana ekran video ufku altta (`#homeVid` top -2%, height 107%).
 - Oyunun yeni adı henüz seçilmedi (şimdilik "Planet Rush" kalacak).
