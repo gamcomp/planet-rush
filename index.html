@@ -340,17 +340,26 @@ html,body{height:100%;margin:0;overflow:hidden;background:var(--void);color:var(
   padding:20px max(18px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 18px) max(18px,env(safe-area-inset-left,0px))}
 @keyframes sheetUp{from{transform:translateY(100%)}to{transform:none}}
 .sheetX{position:absolute;top:14px;right:14px;font-size:22px;line-height:1}
-.sheetHead{display:grid;gap:2px}
-.sheetHead h3{margin:0;font:800 30px var(--f-display)}
-.shStars{display:flex;gap:4px;margin-top:4px}
+.sheetHead{position:relative;display:grid;gap:2px;margin:-20px -18px 0;padding:22px 18px 14px;border-radius:26px 26px 0 0;overflow:hidden;isolation:isolate}
+.shArt{position:absolute;inset:0;z-index:-1;background:#11143a center/cover no-repeat}
+.shArt::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(12,14,38,.35) 0%,rgba(18,20,56,.78) 62%,#1b1e48 100%)}
+.sheetHead .lbl{color:#cfd5ff;text-shadow:0 1px 6px rgba(0,0,0,.7)}
+.sheetHead h3{margin:0;font:800 32px/1.05 var(--f-display);text-shadow:0 2px 12px rgba(0,0,0,.6)}
+.shMeta{display:flex;align-items:center;gap:10px;margin-top:6px}
+.shMeta .chip{background:rgba(5,6,15,.55)}
+.shStars{display:flex;gap:4px}
 .shStars svg{width:26px;height:26px;fill:rgba(255,255,255,.18)}
 .shStars svg.on{fill:#ffd36b;filter:drop-shadow(0 0 6px rgba(255,211,107,.6))}
-.sheetBody{display:grid;grid-template-columns:110px 1fr;gap:16px;align-items:center}
-#shPath{width:110px;height:auto;aspect-ratio:180/326;border-radius:14px;background:rgba(5,6,15,.6);border:1px solid rgba(255,255,255,.1)}
-.facts{margin:0;display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.facts div{padding:8px 10px;border-radius:12px;background:rgba(255,255,255,.05)}
-.facts dt{font-size:12px;color:var(--dim)}
-.facts dd{margin:2px 0 0;font:800 19px var(--f-display);font-variant-numeric:tabular-nums}
+.sheetBody{display:grid;grid-template-columns:118px 1fr;gap:14px;align-items:stretch}
+#shPath{width:118px;height:auto;aspect-ratio:420/760;align-self:center;border-radius:16px;background:#05060f;border:1px solid rgba(255,255,255,.12);box-shadow:0 8px 24px rgba(0,0,0,.45)}
+.facts{margin:0;display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:center}
+.facts div{display:grid;grid-template-columns:22px 1fr;column-gap:8px;align-items:center;padding:9px 10px;border-radius:14px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.06)}
+.facts svg{grid-row:span 2;width:22px;height:22px;fill:none;stroke:var(--fc,#9fd8ff);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.facts dt{font-size:11.5px;color:var(--dim);line-height:1.2}
+.facts dd{margin:1px 0 0;display:flex;flex-wrap:wrap;align-items:center;gap:3px 6px;font:800 19px/1.1 var(--f-display);font-variant-numeric:tabular-nums;min-width:0}
+.facts .dots{display:inline-flex;flex-wrap:wrap;gap:2px;max-width:100%}.facts .dots i{width:7px;height:7px;border-radius:50%;background:var(--c);box-shadow:0 0 6px var(--c)}
+.facts .bars{display:inline-flex;align-items:flex-end;gap:2px;height:14px}.facts .bars i{width:4px;border-radius:2px;background:rgba(255,255,255,.18)}
+.facts .bars i.on{background:var(--fc)}
 .cstars{display:flex;justify-content:center;gap:8px;margin:-4px 0 2px}
 .cstars svg{width:46px;height:46px;fill:rgba(255,255,255,.15);transform:scale(0);animation:starPop .5s cubic-bezier(.2,.9,.3,1.5) both;animation-delay:var(--d)}
 .cstars svg:nth-child(2){width:56px;height:56px;margin-top:-10px}
@@ -408,17 +417,18 @@ html,body{height:100%;margin:0;overflow:hidden;background:var(--void);color:var(
 .bestPill.gem{color:#9fefff;border-color:rgba(127,224,255,.4)}
 .bestPill.gem.bump{animation:popIn .5s cubic-bezier(.2,.9,.3,1.5)}
 .boosts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.boost{position:relative;display:grid;grid-template-columns:44px 1fr;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;border:2px solid rgba(255,255,255,.14);
+.boost{position:relative;display:grid;grid-template-columns:44px 1fr;align-items:center;gap:10px;padding:10px 12px;min-height:72px;border-radius:16px;border:2px solid rgba(255,255,255,.14);
   background:rgba(255,255,255,.05);color:var(--ink);font-family:var(--f-ui);text-align:left;cursor:pointer}
 .boost img{width:44px;height:44px;object-fit:contain}
 .boost strong{display:block;font:800 15px var(--f-display);line-height:1.1}
 .boost small{display:flex;align-items:center;gap:3px;font-size:12px;color:#c5c9ef;margin-top:2px}
+.boost em{display:block;font-style:normal;font-size:11px;line-height:1.25;color:#9aa0d4;margin-top:2px}
 .boost small img{width:16px;height:16px}
 .boost.on{border-color:#7be39a;background:rgba(47,166,106,.2);box-shadow:0 0 0 3px rgba(123,227,154,.18)}
 .boost.on::after{content:"✓";position:absolute;top:6px;right:10px;font:800 16px var(--f-ui);color:#7be39a}
 .boost.no{animation:shake .35s}
 @keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
-.shMsg{margin:-4px 0 0;min-height:1.2em;font-size:13px;color:#9fefff;text-align:center}
+.shMsg{margin:-6px 0 -4px;font-size:13px;color:#9fefff;text-align:center}.shMsg:empty{display:none}
 .shMsg.err{color:#ff9aab}
 .loot{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
 .loot span{display:inline-flex;align-items:center;gap:6px;padding:8px 14px 8px 8px;border-radius:99px;background:rgba(127,224,255,.12);border:1px solid rgba(127,224,255,.35);
@@ -741,8 +751,10 @@ html,body{height:100%;margin:0;overflow:hidden;background:var(--void);color:var(
 <div class="sheet" id="stageSheet" hidden>
   <div class="sheetCard" role="dialog" aria-modal="true" aria-labelledby="shTitle">
     <button class="ibtn sheetX" id="sheetClose" aria-label="Kapat">×</button>
-    <div class="sheetHead"><span class="lbl" id="shWorld">Orion Kapısı</span><h3 id="shTitle">Bölüm 1</h3><div class="shStars" id="shStars"></div></div>
-    <div class="sheetBody"><canvas id="shPath" width="180" height="326" aria-label="Yol önizlemesi"></canvas><dl class="facts" id="shFacts"></dl></div>
+    <div class="sheetHead"><div class="shArt" id="shArt" aria-hidden="true"></div>
+      <span class="lbl" id="shWorld">Orion Kapısı</span><h3 id="shTitle">Bölüm 1</h3>
+      <div class="shMeta"><div class="shStars" id="shStars"></div><span class="chip" id="shDiff"></span></div></div>
+    <div class="sheetBody"><canvas id="shPath" width="210" height="380" aria-label="Yol önizlemesi"></canvas><dl class="facts" id="shFacts"></dl></div>
     <div class="boosts" id="boosts"></div>
     <p class="shMsg" id="shMsg" aria-live="polite"></p>
     <button class="btn" id="shPlay">Oyna</button>
@@ -7800,26 +7812,65 @@ function renderSelect() {
   cta.textContent = target < unlocked ? `Bölüm ${target - firstG + 1}'i tekrar oyna` : `▶  Bölüm ${target - firstG + 1}'i oyna`;
 }
 function drawPathPreview(lv) {
-  const c = $('shPath'), g = c.getContext('2d'), sc = c.width / W;
+  const c = $('shPath'), k = Math.min(2, window.devicePixelRatio || 1);
+  c.width = Math.round(118 * k * 1.6); c.height = Math.round(c.width * H / W);
+  const g = c.getContext('2d'), sc = c.width / W;
   g.clearRect(0, 0, c.width, c.height);
-  const pts = lv.pts().filter(([x, y]) => x > -30 && x < W + 30 && y > -30 && y < H + 30);
-  g.save(); g.scale(sc, c.height / H); g.lineCap = 'round'; g.lineJoin = 'round';
-  g.beginPath(); pts.forEach(([x, y], k) => k ? g.lineTo(x, y) : g.moveTo(x, y));
-  g.strokeStyle = 'rgba(150,170,255,.35)'; g.lineWidth = 26; g.stroke();
-  g.strokeStyle = '#7fe0ff'; g.lineWidth = 5; g.stroke();
+  // the level's own backdrop, tinted like the galaxy, darkened so the track reads
+  const art = IMG[lv.bg];
+  if (art) {
+    const s2 = Math.max(c.width / art.width, c.height / art.height), aw = art.width * s2, ah = art.height * s2;
+    const hue = GAL_HUE[lv.gal || 0]; if (hue && !/^bg1\d$/.test(lv.bg)) g.filter = `hue-rotate(${hue}deg)`;
+    g.drawImage(art, (c.width - aw) / 2, (c.height - ah) / 2, aw, ah); g.filter = 'none';
+    g.fillStyle = 'rgba(4,5,14,.45)'; g.fillRect(0, 0, c.width, c.height);
+  }
+  const rs = RAIL_STYLES[lv.gal || 0] || RAIL_STYLES[0], hex = n => '#' + n.toString(16).padStart(6, '0');
+  const all = lv.pts(), pts = all.filter(([x, y]) => x > -30 && x < W + 30 && y > -30 && y < H + 30);
+  g.save(); g.scale(sc, sc); g.lineCap = 'round'; g.lineJoin = 'round';
+  const trace = () => { g.beginPath(); pts.forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y)); };
+  trace(); g.strokeStyle = 'rgba(0,0,8,.75)'; g.lineWidth = 40; g.stroke();
+  trace(); g.strokeStyle = hex(rs.wall); g.lineWidth = 34; g.stroke();
+  trace(); g.strokeStyle = 'rgba(5,6,15,.85)'; g.lineWidth = 24; g.stroke();
+  trace(); g.strokeStyle = hex(rs.glow); g.lineWidth = 3.5; g.shadowColor = hex(rs.glow); g.shadowBlur = 10; g.stroke(); g.shadowBlur = 0;
+  // the incoming chain: planets in this level's colours along the start of the visible track
+  const r = rng(lv.g * 31 + 7); let shown = 0;
+  for (let i = 0, last = -1e9, run = 0; i < pts.length && shown < 14; i++) {
+    const [x, y] = pts[i]; if (i && Math.hypot(x - pts[last][0], y - pts[last][1]) < 2 * R + 1) continue;
+    const col = PAL[Math.floor(r() * lv.colors) % PAL.length];
+    const gr = g.createRadialGradient(x - 4, y - 4, 1, x, y, R); gr.addColorStop(0, col.hi); gr.addColorStop(.55, col.c); gr.addColorStop(1, col.lo);
+    g.fillStyle = gr; g.beginPath(); g.arc(x, y, R, 0, TAU); g.fill(); last = i; shown++; run++;
+  }
+  // black hole at the end, ship at its post
   const [hx, hy] = pts[pts.length - 1];
-  g.fillStyle = '#000'; g.beginPath(); g.arc(hx, hy, 20, 0, TAU); g.fill(); g.strokeStyle = '#ff9a4a'; g.lineWidth = 7; g.stroke();
-  g.fillStyle = '#ffb547'; g.beginPath(); g.arc(lv.shooter[0], lv.shooter[1], 18, 0, TAU); g.fill();
+  if (IMG.bh) { g.globalCompositeOperation = 'screen'; g.drawImage(IMG.bh, hx - 46, hy - 46, 92, 92); g.globalCompositeOperation = 'source-over'; }
+  else { g.fillStyle = '#000'; g.beginPath(); g.arc(hx, hy, 20, 0, TAU); g.fill(); g.strokeStyle = '#ff9a4a'; g.lineWidth = 7; g.stroke(); }
+  const SH = shipOf(), sim = IMG[SH.key];
+  if (sim) { const sw = 88, shh = sw * sim.height / sim.width; g.save(); g.translate(lv.shooter[0], lv.shooter[1]); g.rotate(-Math.PI / 2); g.drawImage(sim, -sw / 2, -shh / 2, sw, shh); g.restore(); }
+  else { g.fillStyle = '#ffb547'; g.beginPath(); g.arc(lv.shooter[0], lv.shooter[1], 18, 0, TAU); g.fill(); }
   g.restore();
 }
+// small line icons for the level facts
+const FACT_ICON = {
+  planets: '<circle cx="8" cy="12" r="4"/><circle cx="16" cy="12" r="4"/>',
+  ammo: '<path d="M12 3v12"/><path d="M8 11l4 4 4-4"/><path d="M6 20h12"/>',
+  colors: '<circle cx="12" cy="12" r="8"/><path d="M12 4v16M4 12h16"/>',
+  speed: '<path d="M4 16a8 8 0 1 1 16 0"/><path d="M12 16l4-5"/>',
+  best: '<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M12 13v4M8 20h8"/>',
+  stars: '<path d="M12 3l2.5 5.6 6 .6-4.5 4 1.3 6-5.3-3.1-5.3 3.1 1.3-6-4.5-4 6-.6z"/>',
+};
 function openSheet(g) {
   const lv = LEVELS[g], stars = starMap[g] || 0; sheetG = g;
   $('shWorld').textContent = lv.name;
   $('shTitle').textContent = lv.st === STAGES - 1 ? 'Final bölümü' : `Bölüm ${lv.st + 1}`;
   $('shStars').innerHTML = [0, 1, 2].map(i => STAR_SVG.replace('<svg', `<svg class="${i < stars ? 'on' : ''}"`)).join('');
-  const speed = lv.speed < 38 ? 'Yavaş' : lv.speed < 46 ? 'Orta' : 'Hızlı';
-  const facts = [['Gezegen', lv.count], ['Atış', lv.ammo + (shipOf().ammo || 0)], ['Renk', lv.colors], ['Hız', speed], ['En iyi', bestMap[g] ? bestMap[g].toLocaleString(LOCALE) : '–'], ['Yıldız', `${stars}/3`]];
-  $('shFacts').innerHTML = facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('');
+  $('shArt').style.backgroundImage = artUrl(lv.bg);
+  const dl = diffLevel(lv.w); $('shDiff').className = 'chip d' + dl; $('shDiff').textContent = DIFF_NAMES[dl - 1];
+  const sp = lv.speed < 38 ? 1 : lv.speed < 46 ? 2 : 3, speed = ['Yavaş', 'Orta', 'Hızlı'][sp - 1];
+  const dots = '<span class="dots">' + PAL.slice(0, lv.colors).map(p => `<i style="--c:${p.c}"></i>`).join('') + '</span>';
+  const bars = '<span class="bars">' + [1, 2, 3].map(i => `<i class="${i <= sp ? 'on' : ''}" style="height:${4 + i * 3.3}px"></i>`).join('') + '</span>';
+  const facts = [['planets', '#9fd8ff', 'Gezegen', lv.count], ['ammo', '#ffb547', 'Atış', lv.ammo + (shipOf().ammo || 0)], ['colors', '#c99bff', 'Renk', lv.colors + dots],
+    ['speed', ['#7be39a', '#ffd36b', '#ff7a6b'][sp - 1], 'Hız', speed + bars], ['best', '#ffd36b', 'En iyi', bestMap[g] ? bestMap[g].toLocaleString(LOCALE) : '–'], ['stars', '#ffd36b', 'Yıldız', `${stars}/3`]];
+  $('shFacts').innerHTML = facts.map(([ic, col, k, v]) => `<div style="--fc:${col}"><svg viewBox="0 0 24 24" aria-hidden="true">${FACT_ICON[ic]}</svg><dt>${k}</dt><dd>${v}</dd></div>`).join('');
   $('shPlay').textContent = g < unlocked ? 'Tekrar oyna' : 'Oyna';
   sheetBoost = { ammo5: false, slow: false }; $('shMsg').textContent = ''; renderBoosts();
   drawPathPreview(lv);
@@ -7832,7 +7883,7 @@ function renderBoosts() {
   for (const [k, B] of Object.entries(BOOSTS)) {
     const have = wallet[k], b = document.createElement('button');
     b.className = 'boost' + (sheetBoost[k] ? ' on' : '');
-    b.innerHTML = `<img alt="" src="${ASSETS[B.icon] || ''}"><span><strong>${B.name}</strong><small>${have > 0 ? `Sende ${have} tane` : `<img alt="" src="${ASSETS.ic_crystal || ''}">${B.price}`}</small></span>`;
+    b.innerHTML = `<img alt="" src="${ASSETS[B.icon] || ''}"><span><strong>${B.name}</strong><em>${B.desc}</em><small>${have > 0 ? `Sende ${have} tane` : `<img alt="" src="${ASSETS.ic_crystal || ''}">${B.price}`}</small></span>`;
     b.setAttribute('aria-pressed', String(sheetBoost[k])); b.setAttribute('aria-label', `${tr(B.name)}: ${tr(B.desc)}. ${tr(have > 0 ? `${have} tane var` : `${B.price} kristal`)}`);
     b.addEventListener('click', () => {
       if (sheetBoost[k]) { sheetBoost[k] = false; if (b.dataset.bought) { wallet[k]++; } renderBoosts(); return; }
