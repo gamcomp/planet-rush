@@ -9,7 +9,7 @@ Kullanıcı Türkçe konuşur; cevaplar Türkçe olmalı. GitHub'a yalnızca kul
 
 ## Dosyalar
 - `index.html` — oyunun tamamı tek dosyada (HTML + CSS + JS, görseller, sesler ve 15 gemi 3D modeli base64
-  olarak gömülü, ~7,6 MB; 3D modeller artık yok). Doğrudan bu dosya düzenlenir; tarayıcıda çift tıklayınca çalışır.
+  olarak gömülü, ~17,6 MB). Doğrudan bu dosya düzenlenir; tarayıcıda çift tıklayınca çalışır.
   Dosya çok büyük: düzenlerken `Edit` ile benzersiz metin parçaları kullan; Node ile toplu değişiklikte
   `String.replace` yerine `split/join` kullan (`$'`, `` $` `` gibi kalıplar gömülü kodu bozar).
 - `art/` — oyundaki görsellerin kaynak .webp dosyaları (gemiler, arka planlar, simgeler).
@@ -41,15 +41,29 @@ Kullanıcı Türkçe konuşur; cevaplar Türkçe olmalı. GitHub'a yalnızca kul
 - 1500 bölüm: 10 galaksi × 10 dünya × 15 bölüm (`LEVELS`, `THEMES`, `WORLDS`, `GALAXY_NAMES`).
 - 15 gemi (`SHIPS`), 6 özel atış (`SPECIALS`), güçlendirmeler (`BOOSTS`), günlük görev (günde 1 hak).
 - Oyundaki gemi: `drawShooter()` / `drawShipBody()` (sabit ışık, kenar parlaması, gölge, yatma).
-- **3D kaldırıldı (7 Kasım 2026, kullanıcı isteği):** oyun tamamen 2D çizilir. three.js paketi (`t3lib`) ve gemi GLB'leri
-  (`ship3dData`) dosyadan silindi; `G3` artık her çağrıya "kapalı" yanıtı veren küçük bir saplama (`G3.on=false`),
-  `want3d()` hep false, Ayarlar'daki "3D görünüm" anahtarı yok. Kullanıcı istemedikçe 3D'yi geri ekleme. Eski 3D kaynakları
-  arşiv olarak `tools3d/`, `models/` ve git geçmişinde (fbb070f ve öncesi) duruyor. Galaksi yol dokuları (`RAIL_STYLES`)
-  2D ray katmanında (`makeTrackLayer`) kullanılır; `wall`/`glow` alanları artık kullanılmıyor.
-- Performans: sondaki başlatıcı betik mainCode'u gam.co açılışının hareketi bitince (~1,9 sn) çalıştırır; açılış animasyonları
-  yalnızca transform/opacity kullanmalı. `frame()` FPS'i izler; oyun sırasında ort. <40 FPS olursa `lowQ` açılır
-  (`yorunge-lowq` saklanır, dpr ≤1,5). Sesler `fetch(dataURI)` + `decodeAudioData` ile çözülür.
-- Hangar: `hgBuild()` / `hgDraw()` (görselden hacim üretir); WebGL yoksa `build3dShipLayers()` katmanlı görünüm.
+- **3D oyun alanı (`G3`)**: `<script id="t3lib">` three.js r170 paketi (global `T3`), `<script id="ship3dData">`
+  `window.SHIP3D` (gemi id → GLB data URI) ve `SHIP3D_ROT`. Oyun mantığı 2D kalır; `G3.frame()` 2D dünyayı
+  (yol, kara delik, efektler) eğik (32°) bir zemin dokusuna boyar, gezegenleri (oyunun kendi gezegen
+  dokularıyla), atışları ve gemi modelini gerçek 3D çizer. `#game` (arka plan) → `#game3d` (WebGL) →
+  `#gameTop` (güç işaretleri, bölüm yazısı, toz, vinyet) üst üste durur. Nişan: `toWorld()` → `G3.screenToWorld()`
+  (ışın, y=R düzlemi). Modeller "dik" üretildiği için `normaliseShip()` yatırır ve 180° çevirir (kalibrasyonla
+  doğrulandı). **3D tek görünüm (7 Kasım 2026, kullanıcı isteği):** Ayarlar'da 3D anahtarı yok, `want3d()` hep true,
+  eski `yorunge-3d` kaydı yok sayılır/silinir. 2D çizim yalnızca cihazda WebGL yoksa yedek olarak çalışır; kapatma seçeneği geri eklenmesin.
+  Test kancası: `__yz.g3` (`debugBall(i)`, `debugScene()`, `screenToWorld`, `shipReady()`).
+  Bölüm sahnesi (`rebuildLevel()`, yol değişince kendiliğinden): yolun iki kenarına metal 3D duvar + mavi ışık
+  şeridi, rayın gölgesini aşağıdaki uzaya düşüren görünmez taban (y=-60'ta ikinci gölge düzlemi), kara deliğin
+  altında dönen huni (çekim kuyusu), köşelerde 3D dev gezegen (tek bölümlerde halkalı) ve ay — gerçek yüzey haritaları
+  `pl0`–`pl4`, `moon2` (Higgsfield, `art/gezegen-dokulari`), fresnel atmosfer kabuğu, kutup kameraya bakmasın diye eğik
+  (`tiltedBody`) — ve derin yıldız katmanları. Kamera sabit (kullanıcı isteği); yalnızca patlama sarsıntısı oynatır.
+  3D'de 2D `farLayer` çizilmez. Top dokuları `IMG.tex0..5` görsellerinden, koyulaştırılıp doygunlaştırılarak
+  (`gradedPlanetCanvas`) üretilir; görseller geç yüklenirse kendiliğinden yenilenir.
+- Performans (6 Kasım 2026): `t3lib` ve `ship3dData` artık `type="text/plain"`; sondaki başlatıcı betik gam.co açılışının
+  hareketi bitince (~1,9 sn) önce three.js'i çalıştırır, `window.SHIP3D`'yi metinden tembel okuyan bir Proxy yapar, sonra
+  mainCode'u çalıştırır. 3D: gölge 1024 PCF, piksel oranı ≤1,5, zemin dokusu wk ≤1,35. `frame()` FPS'i izler; oyun
+  sırasında ort. <40 FPS olursa `lowQ` açılır (`yorunge-lowq` saklanır; piksel oranı 1, gölge 512, dpr ≤1,5).
+  Sesler `fetch(dataURI)` + `decodeAudioData` ile çözülür. Açılış animasyonları yalnızca transform/opacity kullanmalı.
+- Hangar: gerçek model varsa `G3.hangarSet/hangarDraw` (`#scGL3`), yoksa eski `hgBuild()` / `hgDraw()`
+  (görselden hacim üretir); WebGL yoksa `build3dShipLayers()` katmanlı görünüm.
 - Ses: `audioBus('sfx'|'voice'|'music')` → master → yumuşak limiter (DynamicsCompressor) → hoparlör; efekt kanalı
   .58 ses + 4,8 kHz low-pass ile yumuşatıldı, her kayıtlı efekt 8 ms yumuşak girişle başlar, sentez yedeklerinde
   kare/testere dalga yok. **Spiker kullanıcı isteğiyle kaldırıldı** (6 Kasım 2026): `say()` boş, `v_*` sesleri
