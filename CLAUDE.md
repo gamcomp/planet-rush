@@ -105,5 +105,6 @@ Kullanıcı Türkçe konuşur; cevaplar Türkçe olmalı. GitHub'a yalnızca kul
 - Ana ekran düzeni için 6 öneri (A Ufuk ve Gemi, B Dünya Şeridi, C Günün Görevi, D Gemi Vitrini, E Bölüm Haritası,
   F Sinematik Sade): https://claude.ai/artifact/C8nKD6fmSiUheBGCdD4KwY — **F uygulandı** (6 Kasım 2026): OYNA (`#startBtn`)
   `.homeHero` içinde logonun altında hap düğme, `#nextInfo` tek satır yazı, `.dock` 4 yuvarlak simge (etiketler gizli ama
-  ekran okuyucuda var); stiller `#menuS` ile en sonda. Ana ekran video ufku altta (`#homeVid` top -2%, height 107%).
+  ekran okuyucuda var); stiller `#menuS` ile en sonda. Ana ekran artık video değil, sabit `bg11` (yükleme ekranıyla aynı kadraj: top -2%, height 107%); `HOME_VIDEO = undefined`.
+  Üst çubuk tek cam kapsül (kupa | kristal, TEST etiketi satır içinde, yardım ve ayarlar sağda).
 - Oyunun yeni adı henüz seçilmedi (şimdilik "Planet Rush" kalacak).
