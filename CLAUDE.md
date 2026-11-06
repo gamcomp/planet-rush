@@ -73,4 +73,12 @@ Kullanıcı Türkçe konuşur; cevaplar Türkçe olmalı. GitHub'a yalnızca kul
 - 2 Kasım 2026: 10 yeni görsel tarz daha ana ekran maketi olarak sunuldu (Neon Tüp, Buzlu Cam, Origami,
   Radar Ekranı, Şeker Hamuru, Bauhaus, Gök Atlası, Ukiyo-e Dalga, Yörünge Minimal, Sulu Boya Masalı);
   tasarım tuvali: https://claude.ai/artifact/3jAbitnvx9cYiiQRijZuz4. Kullanıcı henüz seçmedi.
+- 6 Kasım 2026: gam.co açılış ekranı (`.brand` / `.brandMark`) için 10 hareketli seçenek sunuldu (Yörünge Noktası,
+  Neon Tabela, 8-Bit Atari, Top Zinciri, Kara Delik, Görev Terminali, Kâğıt Çıkartma, Geometrik, Takımyıldız,
+  Gezegen Tutulması); tuval: https://claude.ai/artifact/AiQQH1yN3iQkJZrmmxi9JZ. Tutulma'nın güneş/ay/taç görselleri
+  Higgsfield ile üretildi (`art/gamco/`). Kullanıcı 8 (Geometrik/Bauhaus) tarzını beğendi; aynı tuvalde 6 çeşidi
+  var (8a Harf Karoları, 8b Gece Yörüngesi, 8c Afiş, 8d Dönen Çeyrekler, 8e Düşen Bloklar, 8f Pergel ve Cetvel).
+  Kullanıcı henüz son seçimi yapmadı.
+- Oyun GitHub Pages'te yayında: https://gamcomp.github.io/planet-rush/ (depo gamcomp/planet-rush, herkese açık;
+  `git push` yeterli, yayın 1–2 dk sürer).
 - Oyunun yeni adı henüz seçilmedi (şimdilik "Planet Rush" kalacak).
