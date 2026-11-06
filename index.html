@@ -8281,7 +8281,15 @@ if (NATIVE.on) {
   } catch (e) {}
 }
 if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !NATIVE.on && !/claude|anthropic/.test(location.hostname)) {
-  const reg = () => navigator.serviceWorker.register('sw.js').catch(() => {});
+  const reg = () => navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(r => r.update()).catch(() => {});
+  // a new version took over: reload once, but only while the player is on the loading screen or the main menu, never mid-level
+  if (navigator.serviceWorker.controller) navigator.serviceWorker.addEventListener('controllerchange', () => {
+    try { if (sessionStorage.getItem('yorunge-swreload')) return; } catch (e) {}
+    const safe = document.getElementById('boot') || (state === 'menu' && !document.getElementById('menuS').hidden);
+    if (!safe) return;
+    try { sessionStorage.setItem('yorunge-swreload', '1'); } catch (e) {}
+    location.reload();
+  });
   document.readyState === 'complete' ? reg() : window.addEventListener('load', reg);
 }
 window.__yz = { sbuf: () => Object.keys(SBUF), hg: () => ({ ok: HG.ok, err: HG.err, mesh: Object.keys(HG.mesh) }), back: () => goBack(), tr: s => tr(s), get state() { return state; }, get balls() { return balls.length; }, get ss() { return balls.map(b => Math.round(b.s)) + " L=" + Math.round(path.L); }, get score() { return score; },
