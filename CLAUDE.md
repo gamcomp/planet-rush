@@ -62,8 +62,10 @@ Kullanıcı Türkçe konuşur; cevaplar Türkçe olmalı. GitHub'a yalnızca kul
   (`gradedPlanetCanvas`) üretilir; görseller geç yüklenirse kendiliğinden yenilenir.
 - Performans (6 Kasım 2026): `t3lib` ve `ship3dData` artık `type="text/plain"`; sondaki başlatıcı betik gam.co açılışının
   hareketi bitince (~1,9 sn) önce three.js'i çalıştırır, `window.SHIP3D`'yi metinden tembel okuyan bir Proxy yapar, sonra
-  mainCode'u çalıştırır. 3D: gölge 1024 PCF, piksel oranı ≤1,5, zemin dokusu wk ≤1,35. `frame()` FPS'i izler; oyun
-  sırasında ort. <40 FPS olursa `lowQ` açılır (`yorunge-lowq` saklanır; piksel oranı 1, gölge 512, dpr ≤1,5).
+  mainCode'u çalıştırır. 3D zemin iki katman (8 Kasım 2026): ray `trackFloor`/`trackTex` (bölüm başına bir kez, mipmap +
+  anizotropik, `makeTrackLayer` 3D'de ×1,25 keskin) ve her karede yalnızca efektler çizilen `wtex` (mipmap yok, wk ≤1,2).
+  Uyarlanabilir çözünürlük: `frame()` FPS'i izler, ~2,5 sn'de bir `G3.tune(fps)` piksel oranını `PR_STEPS` [1…2] arasında
+  ayarlar (<47 FPS düşür, >57 FPS iki kez yükselt). Çok ağır durumda (<30 FPS, en düşük adımda) `lowQ` açılır. Gölge 1024 PCF.
   Sesler `fetch(dataURI)` + `decodeAudioData` ile çözülür. Açılış animasyonları yalnızca transform/opacity kullanmalı.
 - Hangar: gerçek model varsa `G3.hangarSet/hangarDraw` (`#scGL3`), yoksa eski `hgBuild()` / `hgDraw()`
   (görselden hacim üretir); WebGL yoksa `build3dShipLayers()` katmanlı görünüm.

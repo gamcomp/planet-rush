@@ -6135,7 +6135,7 @@ function updateFX(dt) {
 // ---------- rendering ----------
 const TM = 60; // track layer margin in world units
 function makeTrackLayer() {
-  const k = Math.min(scale * dpr, 2);
+  const k = Math.min(scale * dpr * (G3.on ? 1.25 : 1), G3.on ? 2.6 : 2);
   trackLayer = document.createElement('canvas');
   trackLayer.width = Math.ceil((W + TM * 2) * k); trackLayer.height = Math.ceil((H + TM * 2) * k);
   const g = trackLayer.getContext('2d');
@@ -6838,7 +6838,7 @@ const G3 = (() => {
   function setBallTexture(mat, ci) {
     if (mat.map) mat.map.dispose();
     const tex = new T.CanvasTexture(gradedPlanetCanvas(ci));
-    tex.colorSpace = T.SRGBColorSpace; tex.wrapS = T.RepeatWrapping; tex.anisotropy = 4;
+    tex.colorSpace = T.SRGBColorSpace; tex.wrapS = T.RepeatWrapping; tex.anisotropy = maxAniso;
     mat.map = tex;
     const lava = ci === 0;
     mat.emissive.setHex(0xffffff); mat.emissiveMap = tex; mat.emissiveIntensity = lava ? 0.42 : ci === 5 ? 0.08 : 0.26;
@@ -6848,6 +6848,10 @@ const G3 = (() => {
 
   // ---- level scenery: 3D rail walls, a real gravity well, deep-space planets and stars ----
   let levelFor = null, trackG, wellG, wellTex, decorG, starPts, lowShadow, basePos = null, decorSpots = [];
+  let trackTex = null, trackFloor = null, trackSrc = null, maxAniso = 4;
+  // render resolution steps for the adaptive quality loop (index = api.q)
+  const PR_STEPS = [1, 1.25, 1.5, 1.75, 2];
+  api.q = 2; let qChangedAt = 0, qGood = 0;
   function stripGeo(pts, y0, y1) {
     const pos = [], idx = [];
     pts.forEach(([x, z]) => { pos.push(x, y0, z, x, y1, z); });
@@ -7076,7 +7080,14 @@ const G3 = (() => {
 
     // floor: the 2D world painted into a texture
     wcv = document.createElement('canvas'); wctx = wcv.getContext('2d');
-    wtex = new T.CanvasTexture(wcv); wtex.colorSpace = T.SRGBColorSpace; wtex.anisotropy = 4;
+    maxAniso = Math.min(16, renderer.capabilities.getMaxAnisotropy() || 4);
+    wtex = new T.CanvasTexture(wcv); wtex.colorSpace = T.SRGBColorSpace;
+    wtex.generateMipmaps = false; wtex.minFilter = T.LinearFilter; // redrawn every frame: skip the per-frame mipmap rebuild
+    // the rail itself changes only when the level does: upload it once, mipmapped and anisotropic, so it stays crisp at the tilt
+    trackTex = new T.CanvasTexture(document.createElement('canvas')); trackTex.colorSpace = T.SRGBColorSpace; trackTex.anisotropy = maxAniso;
+    trackFloor = new T.Mesh(new T.PlaneGeometry(W + TM * 2, H + TM * 2), new T.MeshBasicMaterial({ map: trackTex, transparent: true, depthWrite: false, toneMapped: false }));
+    trackFloor.rotation.x = -Math.PI / 2; trackFloor.position.set(W / 2, -0.05, H / 2); trackFloor.renderOrder = -3; trackFloor.visible = false;
+    scene.add(trackFloor);
     floor = new T.Mesh(new T.PlaneGeometry(W + TM * 2, H + TM * 2),
       new T.MeshBasicMaterial({ map: wtex, transparent: true, depthWrite: false, toneMapped: false }));
     floor.rotation.x = -Math.PI / 2; floor.position.set(W / 2, 0, H / 2); floor.renderOrder = -2;
@@ -7173,7 +7184,8 @@ const G3 = (() => {
   function project(x, y, z) { v3.set(x, y, z).project(camera); return [(v3.x + 1) / 2 * cw, (1 - v3.y) / 2 * ch]; }
   api.layout = function () {
     if (!renderer) return;
-    renderer.setPixelRatio(Math.min(dpr, lowQ ? 1 : 1.5)); renderer.setSize(cw, ch, false);
+    if (lowQ) api.q = 0;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, PR_STEPS[api.q])); renderer.setSize(cw, ch, false);
     if (lowQ && sun.shadow.mapSize.x > 512) { sun.shadow.mapSize.set(512, 512); if (sun.shadow.map) { sun.shadow.map.dispose(); sun.shadow.map = null; } }
     topc.width = Math.round(cw * dpr); topc.height = Math.round(ch * dpr);
     camera.aspect = cw / ch; camera.clearViewOffset();
@@ -7193,9 +7205,22 @@ const G3 = (() => {
     camera.setViewOffset(cw, ch, -dx, -dy, cw, ch); camera.updateProjectionMatrix();
     camera.updateMatrixWorld(); basePos = camera.position.clone();
     if (decorSpots.length) placeDecor();
-    wk = Math.max(1, Math.min(lowQ ? 1 : 1.35, scale * dpr));
+    wk = Math.max(.9, Math.min(lowQ ? .9 : 1.2, scale * dpr));
     wcv.width = Math.round((W + TM * 2) * wk); wcv.height = Math.round((H + TM * 2) * wk);
     wtex.dispose(); wtex.image = wcv; wtex.needsUpdate = true;
+  };
+  // called every ~2.5 s of play with the average frame rate: step the render resolution up while the phone has headroom,
+  // down as soon as it struggles. Changes are spaced out so a resize never repeats in quick succession.
+  api.tune = function (fps) {
+    if (!renderer) return;
+    const now = performance.now(), maxQ = PR_STEPS.findIndex(p => p >= Math.min(2, window.devicePixelRatio || 1)), top = maxQ < 0 ? PR_STEPS.length - 1 : maxQ;
+    let q = api.q;
+    if (fps < 47 && q > 0) { q--; qGood = 0; }
+    else if (fps > 57) { if (++qGood >= 2 && q < top && now - qChangedAt > 6000) { q++; qGood = 0; } }
+    else qGood = 0;
+    if (q === api.q) return;
+    api.q = q; qChangedAt = now;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, PR_STEPS[q])); renderer.setSize(cw, ch, false);
   };
   api.debugProject = (x, h, y) => project(x, h, y); // test hooks: world point -> CSS pixels
   api.debugBall = i => { const b = balls[Math.min(balls.length - 1, i)]; if (!b) return null; const p = ballPos(b); return { world: p.map(Math.round), screen: project(p[0], BALL_Y, p[1]).map(Math.round) }; };
@@ -7245,7 +7270,11 @@ const G3 = (() => {
     const main = ctx; ctx = wctx;
     wctx.setTransform(1, 0, 0, 1, 0, 0); wctx.clearRect(0, 0, wcv.width, wcv.height);
     wctx.setTransform(wk, 0, 0, wk, TM * wk, TM * wk);
-    if (trackLayer) ctx.drawImage(trackLayer, -TM, -TM, W + TM * 2, H + TM * 2);
+    if (trackLayer !== trackSrc) { // new level or resize: hand the fresh rail canvas to its own texture
+      trackSrc = trackLayer; trackTex.dispose();
+      if (trackLayer) { trackTex.image = trackLayer; trackTex.needsUpdate = true; }
+      trackFloor.visible = !!trackLayer;
+    }
     drawTrackFX(); drawHole(); drawShots(); drawAim(); drawShooter(); drawBeamsAndVortex(1 / 60); drawFX();
     ctx = main; if (bh0) IMG.bh = bh0;
     wtex.needsUpdate = true;
@@ -7403,12 +7432,14 @@ const G3 = (() => {
 function want3d() { return true; } // 3D is the only view (no off switch); 2D draws only if the device has no WebGL
 
 // ---------- loop ----------
-let last = performance.now();
+let last = performance.now(), tuneT = 0;
 function frame(now) {
   const raw = now - last, dt = Math.min(.033, raw / 1000); last = now;
   if (state === 'play' && raw > 4 && raw < 250) {
     fpsAvg += (1000 / raw - fpsAvg) * .02;
-    if (!lowQ && fpsAvg < 40 && time > 5) { lowQ = true; try { localStorage.setItem('yorunge-lowq', '1'); } catch (e) {} resize(); }
+    tuneT += raw;
+    if (tuneT > 2500 && time > 3) { tuneT = 0; if (G3.on && G3.tune) G3.tune(fpsAvg); }
+    if (!lowQ && fpsAvg < 30 && time > 8 && (!G3.on || G3.q === 0)) { lowQ = true; try { localStorage.setItem('yorunge-lowq', '1'); } catch (e) {} resize(); }
   }
   if (state !== 'paused') {
     time += dt;
