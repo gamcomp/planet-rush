@@ -436,6 +436,8 @@ html,body{height:100%;margin:0;overflow:hidden;background:var(--void);color:var(
   font:800 18px var(--f-display);color:#bff4ff;animation:popIn .5s cubic-bezier(.2,.9,.3,1.4) both}
 .loot span:nth-child(2){animation-delay:.15s;background:rgba(123,227,154,.12);border-color:rgba(123,227,154,.4);color:#c9f7d6}
 .loot img{width:30px;height:30px;object-fit:contain}
+.loot span.lifeLoot{background:rgba(255,90,122,.14);border-color:rgba(255,90,122,.45);color:#ffd0d8}
+.loot span.lifeLoot svg{width:26px;height:26px;fill:#ff5a7a;filter:drop-shadow(0 0 6px rgba(255,90,122,.5))}
 .scard .price{display:inline-flex;align-items:center;gap:4px;margin-top:4px;padding:5px 12px;border-radius:99px;background:linear-gradient(140deg,#7fe0ff,#4a7dff);color:#081032;font:800 14px var(--f-display)}
 .scard .price img{width:18px;height:18px}
 .scard .price.cant{background:rgba(255,255,255,.1);color:var(--dim)}
@@ -773,7 +775,7 @@ html,body{height:100%;margin:0;overflow:hidden;background:var(--void);color:var(
 .lifeTxt{margin:-6px 0 0;color:#ffd0d8;font-weight:600;font-variant-numeric:tabular-nums}
 .lifeRule{margin:-8px 0 0;font-size:12.5px;color:var(--dim)}
 .lifeCard .btn{width:100%}
-.adBtn{display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#3fc6ff,#7c5cff);color:#fff}
+.adBtn{display:flex;align-items:center;justify-content:center;gap:8px;font-size:17px;line-height:1.2;background:linear-gradient(135deg,#3fc6ff,#7c5cff);color:#fff}
 .adBtn svg{width:20px;height:20px;fill:currentColor}
 .adBtn[disabled]{opacity:.5}
 .gemBtn{display:flex;align-items:center;justify-content:center;gap:6px}.gemBtn img{width:20px;height:20px}
@@ -5287,13 +5289,13 @@ const NATIVE = (() => {
 const LIFE_MAX = 5, LIFE_REGEN = 20 * 60 * 1000, LIFE_REFILL_PRICE = 100;
 let life = (() => { try { const v = JSON.parse(localStorage.getItem('yorunge-life')); if (v && typeof v.n === 'number') return v; } catch (e) {} return { n: LIFE_MAX, t: Date.now() }; })();
 function lifeTick() {
-  if (life.n >= LIFE_MAX) { life.n = LIFE_MAX; life.t = Date.now(); return; }
+  if (life.n >= LIFE_MAX) { life.t = Date.now(); return; } // bonus lives may sit above the cap; refills only run below it
   const k = Math.floor((Date.now() - life.t) / LIFE_REGEN);
   if (k > 0) { life.n = Math.min(LIFE_MAX, life.n + k); life.t = life.n >= LIFE_MAX ? Date.now() : life.t + k * LIFE_REGEN; saveLife(); }
 }
 function saveLife() { try { localStorage.setItem('yorunge-life', JSON.stringify(life)); } catch (e) {} if (typeof renderLife === 'function') renderLife(); }
 function lifeLeftMs() { return life.n >= LIFE_MAX ? 0 : Math.max(0, LIFE_REGEN - (Date.now() - life.t)); }
-function gainLife(k) { lifeTick(); life.n = Math.min(LIFE_MAX, life.n + k); if (life.n >= LIFE_MAX) life.t = Date.now(); saveLife(); }
+function gainLife(k, bonus) { lifeTick(); life.n = bonus ? Math.min(99, life.n + k) : Math.max(life.n, Math.min(LIFE_MAX, life.n + k)); if (life.n >= LIFE_MAX) life.t = Date.now(); saveLife(); }
 function spendLife() { lifeTick(); if (life.n >= LIFE_MAX) life.t = Date.now(); life.n = Math.max(0, life.n - 1); saveLife(); }
 const mmss = ms => { const t = Math.ceil(ms / 1000); return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); };
 
@@ -8183,6 +8185,7 @@ $('dailyAdBtn').addEventListener('click', async () => {
   const b = $('dailyAdBtn'); b.disabled = true;
   if (lastLoot && await ADS.rewarded()) {
     wallet.crystals += lastLoot.crystals; lastLoot.crystals *= 2; saveWallet(); renderWallet();
+    if (lastLoot.lives) { gainLife(lastLoot.lives, true); lastLoot.lives *= 2; }
     $('clearLoot').innerHTML = lootHtml(lastLoot); b.hidden = true; toast(tr('Ödül 2 katına çıktı!'));
   } else { b.disabled = false; if (lastLoot) toast(tr('Reklam yüklenemedi, biraz sonra tekrar dene.')); }
 });
@@ -8500,7 +8503,7 @@ function toast(msg) {
 let lastLoot = null;
 function lootHtml(l) {
   if (!l) return '';
-  return `<span><img alt="" src="${ASSETS.ic_crystal || ''}">+${l.crystals}</span>${l.boost ? `<span><img alt="" src="${ASSETS[BOOSTS[l.boost].icon] || ''}">${BOOSTS[l.boost].name}</span>` : ''}${(l.news || []).map(n => `<span class="new"><img alt="" src="${n.img}">${n.txt}</span>`).join('')}`;
+  return `<span><img alt="" src="${ASSETS.ic_crystal || ''}">+${l.crystals}</span>${l.lives ? `<span class="lifeLoot">${HEART}+${l.lives}</span>` : ''}${l.boost ? `<span><img alt="" src="${ASSETS[BOOSTS[l.boost].icon] || ''}">${BOOSTS[l.boost].name}</span>` : ''}${(l.news || []).map(n => `<span class="new"><img alt="" src="${n.img}">${n.txt}</span>`).join('')}`;
 }
 function finishDaily() {
   lastLoot = null;
@@ -8512,8 +8515,9 @@ function finishDaily() {
   dailyState.last = t; dailyState.done = t;
   try { localStorage.setItem('yorunge-daily', JSON.stringify(dailyState)); } catch (e) {}
   const gift = Math.random() < .5 ? 'ammo5' : 'slow';
-  lastLoot = { crystals: 150 + 50 * Math.min(6, dailyState.streak - 1), boost: gift };
+  lastLoot = { crystals: 150 + 50 * Math.min(6, dailyState.streak - 1), boost: gift, lives: 1 };
   wallet.crystals += lastLoot.crystals; wallet[gift]++; saveWallet();
+  gainLife(lastLoot.lives, true); // daily bonus life, may go above the cap
 }
 function renderDaily() {
   const lv = dailyLevel(), done = dailyState.done === todayKey();

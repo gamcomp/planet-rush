@@ -81,7 +81,8 @@ Kullanıcı Türkçe konuşur; cevaplar Türkçe olmalı. GitHub'a yalnızca kul
   `startLevel(sayı)` can ister (yoksa `openLifeSheet`), zincir deliğe ulaşınca `spendLife()`; günlük görev ve test modu can harcamaz.
   Reklam: `ADS` modülü — uygulamada `@capacitor-community/admob` (`AD_IDS`: şu an Google **TEST** kimlikleri; AndroidManifest
   `APPLICATION_ID` ve iOS `GADApplicationIdentifier` da test), web'de 5 sn'lik "Test reklamı" yer tutucusu. Ödüllü reklam: can bitti
-  penceresi (+1 can), oyun bitti ekranı (+1 can, hemen devam), günlük görev bitişi (kristal ödülü 2 kat). Alt banner `#adBanner`
+  penceresi (+1 can), oyun bitti ekranı (+1 can, hemen devam), günlük görev bitişi (kristal ve can ödülü 2 kat).
+  Günlük görev ödülü +1 bonus can da verir (`lastLoot.lives`, `gainLife(k, true)` üst sınırı aşabilir; dolum yalnızca 5'in altında işler). Alt banner `#adBanner`
   (`body.hasAd` → oyun alanı/menüler 54 px yukarı); web'de yalnızca test modunda yer tutucu görünür. Yayından önce gerçek AdMob
   kimlikleri ve AB için onay (UMP) gerekli.
 - Yerel uygulama köprüsü: `NATIVE` (Capacitor App, Haptics, StatusBar), `goBack()` Android geri tuşu.
