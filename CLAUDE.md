@@ -41,7 +41,7 @@ Kullanıcı Türkçe konuşur; cevaplar Türkçe olmalı. GitHub'a yalnızca kul
 - 1500 bölüm: 10 galaksi × 10 dünya × 15 bölüm (`LEVELS`, `THEMES`, `WORLDS`, `GALAXY_NAMES`).
 - 15 gemi (`SHIPS`) — her gemide tam **iki özellik** (shot/ammo/charge/combo/slow/nova; hangarda `perkLines()` iki etiket, I18P kalıpları)
   ve kendine özgü **atış efekti** (`SHOT_FX`: renkler + parçacık şekli dot/shard/star/ring/ghost/ember/bolt/rainbow; namlu, iz, isabet
-  `shipImpact()`; `shotFx()` — `shipFx` adı G3'te yatma animasyonu için kullanılıyor), 6 özel atış (`SPECIALS`), güçlendirmeler (`BOOSTS`), günlük görev (günde 1 hak).
+  `shipImpact()`; `shotFx()` — `shipFx` adı G3'te yatma animasyonu için kullanılıyor), 6 özel atış (`SPECIALS`; her gemiye `SHIP_SPECS` ile sabit **iki** özel atış — 15 olası ikili, gemi başına bir; oyunda sol altta iki düğme `#specBtn`/`#specBtn2`, ayrı dolum `charges[2]`, `armSlot`; bölüm kilidi ve seçim yok, hangarda odaktaki geminin ikisi görünür), güçlendirmeler (`BOOSTS`), günlük görev (günde 1 hak).
 - Oyundaki gemi: `drawShooter()` / `drawShipBody()` (sabit ışık, kenar parlaması, gölge, yatma).
 - **3D oyun alanı (`G3`)**: `<script id="t3lib">` three.js r170 paketi (global `T3`), `<script id="ship3dData">`
   `window.SHIP3D` (gemi id → GLB data URI) ve `SHIP3D_ROT`. Oyun mantığı 2D kalır; `G3.frame()` 2D dünyayı
