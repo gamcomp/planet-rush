@@ -80,7 +80,7 @@ Kullanıcı Türkçe konuşur; cevaplar Türkçe olmalı. GitHub'a yalnızca kul
   (sonilo) ve efekt (mirelo) modelleri yalnızca kendi oyun hattında kullanılabiliyor; yeni ses için ElevenLabs
   (Sound Effects / Music, yüksek bit hızı) ya da CC0 kütüphaneler gerekir.
 - **Can sistemi + reklam (8 Kasım 2026):** kalıcı canlar `life` (`yorunge-life`, en fazla 5, 20 dk'da 1 dolar; `lifeTick/spendLife/gainLife`).
-  `startLevel(sayı)` can ister (yoksa `openLifeSheet`), zincir deliğe ulaşınca `spendLife()`; günlük görev ve test modu can harcamaz.
+  `startLevel(sayı)` can ister (yoksa `openLifeSheet`), zincir deliğe ulaşınca `spendLife()`; duraklatmadan "Baştan başla" ve "Ana menü" de 1 can harcar (`#pzCost` uyarısı); günlük görev ve test modu can harcamaz.
   Reklam: `ADS` modülü — uygulamada `@capacitor-community/admob` (`AD_IDS`: şu an Google **TEST** kimlikleri; AndroidManifest
   `APPLICATION_ID` ve iOS `GADApplicationIdentifier` da test), web'de 5 sn'lik "Test reklamı" yer tutucusu. Ödüllü reklam: can bitti
   penceresi (+1 can), oyun bitti ekranı (+1 can, hemen devam), günlük görev bitişi (kristal ve can ödülü 2 kat).
