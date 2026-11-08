@@ -729,6 +729,35 @@ html,body{height:100%;margin:0;overflow:hidden;background:var(--void);color:var(
 #hud .ibtn{width:40px;height:40px;background:rgba(10,12,32,.58);border:1px solid rgba(255,255,255,.14);box-shadow:0 6px 18px rgba(0,0,0,.25)}
 #hud .ibtn svg{width:18px;height:18px}
 @media (max-width:360px){#hud .lbl{display:none}#bar{width:72px}#hud .mid{padding:5px 10px 7px}}
+/* in-game HUD v2 "Kokpit": one console band across the top with a dropped centre bay and a neon edge; replaces the glass cards above */
+#hud{grid-template-columns:1fr auto 1fr;align-items:start;gap:6px;padding-bottom:26px;background:none;isolation:isolate} /* the box reaches the bay, so the field starts below the console */
+#hud::before,#hud::after{content:"";position:absolute;left:0;right:0;top:0;z-index:-1;pointer-events:none;
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 22px),71% calc(100% - 22px),66% 100%,34% 100%,29% calc(100% - 22px),0 calc(100% - 22px))}
+#hud::before{height:calc(env(safe-area-inset-top,0px) + 100px);background:linear-gradient(180deg,rgba(6,8,24,.92),rgba(10,14,40,.78));z-index:-1}
+#hud::after{height:calc(env(safe-area-inset-top,0px) + 102px);background:linear-gradient(90deg,rgba(80,200,255,.0),rgba(80,200,255,.9) 30%,rgba(255,181,71,.9) 50%,rgba(80,200,255,.9) 70%,rgba(80,200,255,0));z-index:-2;filter:drop-shadow(0 0 6px rgba(80,200,255,.8))}
+#hud>div:first-child{display:block;padding:0;border:0;border-radius:0;background:none;box-shadow:none}
+#hud .lbl{display:block;font-size:9.5px;letter-spacing:.22em;color:#7fd8ff;font-weight:700}
+#score{font:800 26px/1 var(--f-display);color:#ffc061;text-shadow:0 0 14px rgba(255,170,60,.55);font-variant-numeric:tabular-nums}
+#hud .ammo{display:inline-flex;flex-direction:row;align-items:center;gap:4px;margin-top:4px;padding:0;border:0;background:none;font-size:0;letter-spacing:0}
+#hud .ammo img{width:18px;height:18px;filter:drop-shadow(0 0 4px rgba(127,216,255,.6))}
+#hud .ammo span{display:none}
+#hud .ammo b{font:800 15px/1 var(--f-display);color:#bfefff}
+#hud .ammo.low b{color:#ff6b84}
+#hud .ammo.low img{filter:drop-shadow(0 0 5px #ff4d6a) hue-rotate(140deg)}
+#hud .mid{align-self:start;margin-top:2px;padding:0;border:0;border-radius:0;background:none;box-shadow:none;min-width:150px}
+#sector{font:800 13px/1.2 var(--f-display);letter-spacing:.14em;text-transform:uppercase;color:#e9ecff;text-shadow:0 0 10px rgba(127,216,255,.4)}
+#hud .midRow{flex-direction:column;gap:7px;margin-top:7px}
+#bar{width:140px;height:8px;border-radius:2px;background:rgba(127,216,255,.12);box-shadow:inset 0 0 0 1px rgba(127,216,255,.3);position:relative}
+#bar i{border-radius:2px;background:linear-gradient(90deg,#3fc6ff,#ffb547);box-shadow:0 0 10px rgba(255,181,71,.7)}
+#bar::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 12px,rgba(6,8,24,.95) 12px 14px)}
+#lives{gap:9px}
+#lives span{width:9px;height:9px;border-radius:2px;transform:rotate(45deg);background:#ffb547;box-shadow:0 0 8px #ffb547}
+#lives span.off{background:transparent;box-shadow:none;border:1px solid rgba(255,181,71,.45)}
+#hud .right{align-self:start;gap:8px}
+#hud .ibtn{width:42px;height:40px;border:0;border-radius:0;box-shadow:none;color:#bfefff;
+  background:linear-gradient(180deg,rgba(80,200,255,.28),rgba(20,40,90,.55));clip-path:polygon(9px 0,calc(100% - 9px) 0,100% 50%,calc(100% - 9px) 100%,9px 100%,0 50%)}
+#hud .ibtn:active{background:linear-gradient(180deg,rgba(255,181,71,.4),rgba(90,50,20,.6))}
+@media (max-width:360px){#hud .lbl{display:block}#score{font-size:22px}#bar{width:110px}#hud .mid{min-width:120px}}
 /* home: the still orbit scene, framed exactly like the loading screen so the hand-off does not move */
 #menuS .homeArt{inset:auto;left:0;right:0;top:-2%;height:107%;background-size:cover;background-position:50% 50%;transform:none;animation:none}
 /* home top bar: one glass capsule; stats on the left, help and settings on the right */
@@ -776,7 +805,7 @@ html,body{height:100%;margin:0;overflow:hidden;background:var(--void);color:var(
 <button class="specBtn" id="specBtn" aria-label="Özel atış" hidden><span class="specRing" id="specRing"></span><img id="specIco" alt=""><b id="specTxt"></b></button>
 
 <div id="hud">
-  <div><div class="lbl">Skor</div><div id="score">0</div><div id="ammo" class="ammo" aria-label="Kalan atış"><span>Atış</span> <b id="ammoN">0</b></div></div>
+  <div><div class="lbl">Skor</div><div id="score">0</div><div id="ammo" class="ammo" aria-label="Kalan atış"><img data-icon="ic_ammo" alt=""><span>Atış</span> <b id="ammoN">0</b></div></div>
   <div class="mid"><div id="sector">DÜNYA 1 · 1/15</div><div class="midRow"><div id="bar"><i></i></div><div id="lives" aria-label="Canlar"></div></div></div>
   <div class="right">
     <button class="ibtn" id="muteBtn" aria-label="Sesi aç/kapat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path id="snd" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg></button>
