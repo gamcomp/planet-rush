@@ -6257,6 +6257,13 @@ function drawDisk(front) {
 }
 function drawHole() {
   const [hx, hy] = hole;
+  if (G3.on) { // the real black hole is a 3D object; just light the floor beneath it
+    const pulse = .5 + .5 * Math.sin(time * 6);
+    const gl = ctx.createRadialGradient(hx, hy, 8, hx, hy, 110);
+    gl.addColorStop(0, `rgba(255,${Math.round(140 - danger * 90)},70,${(.28 + danger * .3 * pulse).toFixed(3)})`); gl.addColorStop(.45, 'rgba(140,50,180,.12)'); gl.addColorStop(1, 'rgba(60,20,120,0)');
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = gl; ctx.beginPath(); ctx.arc(hx, hy, 110, 0, TAU); ctx.fill(); ctx.restore();
+    return;
+  }
   ctx.save(); ctx.translate(hx, hy);
   const pulse = .5 + .5 * Math.sin(time * 6);
   const glow = ctx.createRadialGradient(0, 0, 14, 0, 0, 92);
@@ -6889,14 +6896,64 @@ const G3 = (() => {
     }
     const t = new T.CanvasTexture(c); t.colorSpace = T.SRGBColorSpace; t.wrapS = T.RepeatWrapping; return t;
   }
+  // ---- the black hole: an opaque horizon, a hot swirling disk (Doppler-bright on one side), and a camera-facing card
+  // that draws the photon ring plus the far side of the disk lensed over the top and under the bottom ----
+  const BH = { t: { value: 0 }, d: { value: 0 } };
+  const BH_DISK_V = 'varying vec2 vP; void main(){ vP = position.xy; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }';
+  const BH_DISK_F = `uniform float t; uniform float d; varying vec2 vP;
+    float h(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+    float n(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
+      return mix(mix(h(i), h(i + vec2(1, 0)), f.x), mix(h(i + vec2(0, 1)), h(i + vec2(1, 1)), f.x), f.y); }
+    void main(){
+      float r = length(vP), a = atan(vP.y, vP.x);
+      float k = clamp((r - 18.0) / 56.0, 0.0, 1.0);              // 0 at the inner edge, 1 at the rim
+      float spin = a + t * (1.6 - k * 1.1) + 2.2 / (k + 0.35);    // inner gas orbits faster and winds into a spiral
+      float g = n(vec2(spin * 3.0, k * 9.0)) * 0.6 + n(vec2(spin * 9.0, k * 26.0)) * 0.4;
+      float streak = 0.55 + 0.75 * g;
+      float dop = 0.45 + 0.95 * pow(max(0.0, 0.5 + 0.5 * cos(a - 2.4)), 1.6); // the side moving toward us is brighter
+      vec3 hot = vec3(1.0, 0.97, 0.9), mid = vec3(1.0, 0.62, 0.25), cool = vec3(0.75, 0.16, 0.06);
+      vec3 c = k < 0.3 ? mix(hot, mid, k / 0.3) : mix(mid, cool, (k - 0.3) / 0.7);
+      c = mix(c, vec3(1.0, 0.25, 0.15), d * 0.35);
+      float edge = smoothstep(0.0, 0.05, k) * pow(1.0 - k, 1.5);
+      float lum = edge * streak * dop * (1.7 + d * 0.9);
+      gl_FragColor = vec4(c * lum, clamp(lum, 0.0, 1.0));
+    }`;
+  const BH_CARD_F = `uniform float t; uniform float d; varying vec2 vP;
+    void main(){
+      vec2 p = vP / 70.0; float r = length(p), a = atan(p.y, p.x);
+      float ring = exp(-pow((r - 0.255) / 0.014, 2.0)) * (0.9 + 0.25 * sin(a * 3.0 + t * 2.0));     // photon ring
+      float arcTop = exp(-pow((r - 0.31) / 0.05, 2.0)) * smoothstep(-0.05, 0.35, p.y) * (0.55 + 0.45 * cos(a - 1.5708));
+      float arcLow = exp(-pow((r - 0.29) / 0.03, 2.0)) * smoothstep(0.05, -0.3, p.y) * 0.45;          // the faint secondary image
+      float swirl = 0.7 + 0.3 * sin(a * 9.0 - t * 3.0 + r * 40.0);
+      float glow = exp(-r * 4.2) * 0.35;
+      vec3 c = vec3(1.0, 0.86, 0.66) * ring * 1.4 + vec3(1.0, 0.62, 0.3) * (arcTop + arcLow) * swirl * 1.9 + vec3(1.0, 0.5, 0.3) * glow;
+      c *= (1.0 + d * 0.6); float alpha = clamp(max(max(ring, arcTop), glow) * 1.2, 0.0, 1.0) * step(0.2, r);
+      gl_FragColor = vec4(c * step(0.2, r), alpha);
+    }`;
+  let bhCard = null;
+  function buildBlackHole() {
+    const g = new T.Group(); g.position.set(hole[0], BALL_Y, hole[1]);
+    const horizon = new T.Mesh(new T.SphereGeometry(16, 48, 32), new T.MeshBasicMaterial({ color: 0x000000 }));
+    horizon.renderOrder = 1; g.add(horizon);
+    const disk = new T.Mesh(new T.RingGeometry(18, 74, 192, 2), new T.ShaderMaterial({ uniforms: BH, vertexShader: BH_DISK_V, fragmentShader: BH_DISK_F,
+      transparent: true, blending: T.AdditiveBlending, depthWrite: false, side: T.DoubleSide, toneMapped: false }));
+    // seen almost edge-on from the tilted camera (≈12° above its plane), like a classic lensed black hole portrait
+    disk.rotation.set(-2.37, 0, .06); disk.renderOrder = 2; g.add(disk);
+    bhCard = new T.Mesh(new T.PlaneGeometry(140, 140), new T.ShaderMaterial({ uniforms: BH, vertexShader: BH_DISK_V, fragmentShader: BH_CARD_F,
+      transparent: true, blending: T.AdditiveBlending, depthWrite: false, toneMapped: false }));
+    bhCard.renderOrder = 3; g.add(bhCard);
+    const light = new T.PointLight(0xff9a50, 900, 170, 1.6); light.position.set(0, 10, 0); g.add(light); // warms the planets as they arrive
+    wellG.add(g);
+  }
   function buildWell() {
     clearGroup(wellG);
     if (!wellTex) wellTex = wellTexture();
     const cone = new T.Mesh(new T.CylinderGeometry(46, 3, 170, 64, 8, true),
-      new T.MeshBasicMaterial({ map: wellTex, side: T.BackSide, transparent: true, depthWrite: false, blending: T.AdditiveBlending, toneMapped: false }));
+      new T.MeshBasicMaterial({ map: wellTex, side: T.BackSide, transparent: true, opacity: .14, depthWrite: false, blending: T.AdditiveBlending, toneMapped: false })); // only a faint hint of depth: the black hole itself is the show
     cone.position.set(hole[0], -86, hole[1]); cone.renderOrder = -3; wellG.add(cone);
     const dark = new T.Mesh(new T.CylinderGeometry(40, 2, 150, 48, 1, true), new T.MeshBasicMaterial({ color: 0x000000, side: T.BackSide, transparent: true, opacity: .55, depthWrite: false }));
     dark.position.set(hole[0], -95, hole[1]); dark.renderOrder = -4; wellG.add(dark);
+    buildBlackHole();
   }
   function decorTexture(ci, hue, br = .55) {
     const src = IMG['tex' + ci]; const c = document.createElement('canvas'); c.width = 512; c.height = 256; const g = c.getContext('2d');
@@ -7200,6 +7257,8 @@ const G3 = (() => {
     if (levelFor !== path) rebuildLevel();
     for (let ci = 0; ci < ballMats.length; ci++) if (!texHasArt[ci] && IMG['tex' + ci]) setBallTexture(ballMats[ci], ci);
     if (wellTex) wellTex.offset.x = (time * .09) % 1, wellTex.offset.y = -(time * .25) % 1;
+    BH.t.value = time; BH.d.value = danger;
+    if (bhCard) bhCard.quaternion.copy(camera.quaternion);
     decorG.children.forEach((m, i) => { (m.userData.spin || m).rotation.y = time * (i ? .05 : .025); });
     paintWorld();
     // planets on the track
