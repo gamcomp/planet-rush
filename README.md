@@ -68,16 +68,16 @@ Alt dock: **Dünyalar · Hangar · OYNA · Günlük · Skorlar**; üst çubuk: y
 | Sonsuz | +5 atış, hızlı dolum, kombo | Bölüm 1350 |
 
 ## Özel atışlar
-Gezegen patlattıkça sol alttaki gösterge dolar (24 gezegen). Dolunca dokun: sonraki atış özel olur ve atış hakkından düşmez. Takılı atış Hangar'dan seçilir.
+Her geminin kendine ait **iki** özel atışı var (6 atışın 15 olası ikilisi, gemi başına bir). Gezegen patlattıkça sol alttaki iki gösterge ayrı ayrı dolar (24 gezegen). Dolan düğmeye dokun (masaüstünde 1 / 2 tuşları): sonraki atış özel olur ve atış hakkından düşmez.
 
-| Atış | Etki | Açılış |
-|---|---|---|
-| Gökkuşağı | Çarptığı gezegenin rengini alır | Bölüm 15 |
-| Bomba | Çarptığı yerde patlar | Bölüm 60 |
-| Lazer | Hattaki ilk 6 gezegeni deler | Bölüm 150 |
-| Dondurucu | Zinciri 5 sn durdurur | Bölüm 300 |
-| Şok Dalgası | Zinciri geri iter | Bölüm 600 |
-| Mini Kara Delik | Çevresini yutar | Bölüm 1000 |
+| Atış | Etki |
+|---|---|
+| Gökkuşağı | Çarptığı gezegenin rengini alır |
+| Bomba | Çarptığı yerde patlar |
+| Lazer | Hattaki ilk 6 gezegeni deler |
+| Dondurucu | Zinciri 5 sn durdurur |
+| Şok Dalgası | Zinciri geri iter |
+| Mini Kara Delik | Çevresini yutar |
 
 ## Kristaller ve güçlendiriciler
 - **Günlük görev ödülü:** 150 kristal, seri her gün +50 (en fazla 450) ve bir güçlendirici (+5 Atış ya da Yavaş Başlangıç).
