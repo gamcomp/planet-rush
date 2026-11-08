@@ -88,7 +88,7 @@ Kullanıcı Türkçe konuşur; cevaplar Türkçe olmalı. GitHub'a yalnızca kul
   (`body.hasAd` → oyun alanı/menüler 54 px yukarı); web'de yalnızca test modunda yer tutucu görünür. Yayından önce gerçek AdMob
   kimlikleri ve AB için onay (UMP) gerekli.
 - Yerel uygulama köprüsü: `NATIVE` (Capacitor App, Haptics, StatusBar), `goBack()` Android geri tuşu.
-- Testler: headless tarayıcı **her zaman `--mute-audio`** ile (kullanıcı test sırasında ses duymak istemiyor). Not: ilk açılışta (`yorunge-testinit` yoksa) test modu bir kez kendiliğinden açılır; gerçek oyuncu testi için `yorunge-testinit=1`, `yorunge-test=0` yap. `__yz.lose()` girişi de bitirir (`spawned = total`).
+- Testler: headless tarayıcı **her zaman `--mute-audio`** ile (kullanıcı test sırasında ses duymak istemiyor). Test modu artık kendiliğinden açılmaz (8 Kasım 2026, kullanıcı isteği): eski sürümün ilk açılışta açtığı test modu `yorunge-testinit` "2" değilse bir kez kapatılır (yedekten ilerleme geri gelir); Ayarlar'dan elle açılabilir. `__yz.lose()` girişi de bitirir (`spawned = total`).
 - `window.__yz` test kancaları (ör. `__yz.setLang('en')`, `__yz.back()`).
 - localStorage anahtarları `yorunge-` ile başlar (ilerleme, cüzdan, gemiler, dil, test modu...).
 

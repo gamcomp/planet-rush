@@ -8735,7 +8735,8 @@ window.addEventListener('resize', resize);
 window.addEventListener('orientationchange', () => setTimeout(resize, 200));
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(resize);
 setMuteIcon();
-try { if (!localStorage.getItem('yorunge-testinit')) { localStorage.setItem('yorunge-testinit', '1'); setTestMode(true); } else if (testMode) setTestMode(true); } catch (e) {}
+// test mode is never switched on automatically; the old build turned it on at first launch, so switch that off once (players can still enable it in Settings)
+try { if (localStorage.getItem('yorunge-testinit') !== '2') { localStorage.setItem('yorunge-testinit', '2'); if (testMode) setTestMode(false); } else if (testMode) setTestMode(true); } catch (e) {}
 $('testBadge').hidden = !testMode;
 loadArt();
 loadLevel(0);
