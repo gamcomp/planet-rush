@@ -708,6 +708,27 @@ html,body{height:100%;margin:0;overflow:hidden;background:var(--void);color:var(
 .bootTip{margin:18px 0 0;min-height:0;max-width:300px;padding:8px 14px;border-radius:14px;font:500 13px/1.4 var(--f-ui);color:#e6e9ff;text-align:center;
   background:rgba(10,12,32,.42);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 .bootFoot{color:rgba(255,255,255,.55);text-shadow:0 1px 6px rgba(0,0,0,.8)}
+/* in-game HUD in the home screen's glass language (no backdrop blur over the live 3D canvas: it costs frames) */
+#hud{grid-template-columns:auto minmax(0,1fr) auto;gap:8px;padding-bottom:20px;background:linear-gradient(to bottom,rgba(5,6,15,.5),rgba(5,6,15,0))}
+#hud>div:first-child{justify-self:start;display:grid;grid-template-columns:auto auto;align-items:center;column-gap:8px;padding:6px 8px 6px 12px;border-radius:18px;
+  background:rgba(10,12,32,.58);border:1px solid rgba(255,255,255,.14);box-shadow:0 6px 18px rgba(0,0,0,.25)}
+#hud .lbl{grid-column:1;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#aab0e0;line-height:1.2}
+#score{grid-column:1;font:800 21px/1 var(--f-display);color:var(--amber);text-shadow:0 0 12px rgba(255,181,71,.35)}
+#hud .ammo{grid-column:2;grid-row:1/span 2;margin:0;padding:4px 9px;border-radius:12px;display:flex;flex-direction:column;align-items:center;line-height:1.1;
+  background:rgba(127,200,255,.12);border:1px solid rgba(127,200,255,.25);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#aab0e0}
+#hud .ammo b{font:800 17px/1 var(--f-display);color:#bfefff}
+#hud .ammo.low{background:rgba(255,77,106,.16);border-color:rgba(255,77,106,.6)}
+#hud .mid{justify-self:center;max-width:100%;padding:6px 14px 8px;border-radius:16px;background:rgba(10,12,32,.58);border:1px solid rgba(255,255,255,.14);box-shadow:0 6px 18px rgba(0,0,0,.25)}
+#sector{font:800 14px/1.2 var(--f-display);letter-spacing:.02em;overflow:hidden;text-overflow:ellipsis}
+#hud .midRow{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:5px}
+#bar{margin:0;width:96px;height:6px;border-radius:3px;background:rgba(255,255,255,.12)}
+#bar i{border-radius:3px;box-shadow:0 0 8px rgba(255,181,71,.65)}
+#lives{margin:0;gap:4px}
+#lives span{width:8px;height:8px}
+#hud .right{gap:6px}
+#hud .ibtn{width:40px;height:40px;background:rgba(10,12,32,.58);border:1px solid rgba(255,255,255,.14);box-shadow:0 6px 18px rgba(0,0,0,.25)}
+#hud .ibtn svg{width:18px;height:18px}
+@media (max-width:360px){#hud .lbl{display:none}#bar{width:72px}#hud .mid{padding:5px 10px 7px}}
 /* home: the still orbit scene, framed exactly like the loading screen so the hand-off does not move */
 #menuS .homeArt{inset:auto;left:0;right:0;top:-2%;height:107%;background-size:cover;background-position:50% 50%;transform:none;animation:none}
 /* home top bar: one glass capsule; stats on the left, help and settings on the right */
@@ -756,9 +777,8 @@ html,body{height:100%;margin:0;overflow:hidden;background:var(--void);color:var(
 
 <div id="hud">
   <div><div class="lbl">Skor</div><div id="score">0</div><div id="ammo" class="ammo" aria-label="Kalan atış"><span>Atış</span> <b id="ammoN">0</b></div></div>
-  <div class="mid"><div id="sector">DÜNYA 1 · 1/15</div><div id="bar"><i></i></div></div>
+  <div class="mid"><div id="sector">DÜNYA 1 · 1/15</div><div class="midRow"><div id="bar"><i></i></div><div id="lives" aria-label="Canlar"></div></div></div>
   <div class="right">
-    <div id="lives" aria-label="Canlar"></div>
     <button class="ibtn" id="muteBtn" aria-label="Sesi aç/kapat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path id="snd" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg></button>
     <button class="ibtn" id="pauseBtn" aria-label="Duraklat"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></button>
   </div>
